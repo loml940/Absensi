@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Absensi Senam Pagi</title>
+  <style>
+    form, table {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin: 20px auto;
+  max-width: 500px;
+}
+    
+    .transparent-form-container {
+    background-color: rgba(255, 255, 255, 0.6); /* Putih transparan */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 500px;
+  margin: 20px auto;
+}
+}
+    form, table {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin: 20px auto;
+      max-width: 500px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body style="background-image: url('taspen.jpg');
+background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;">
+
+  <h1 style="text-align:center">Absensi Senam Pagi</h1>
+
+  <form id="absenForm" class="transparent-form-container">
+    <input type="text" id="nama" placeholder="Nama lengkap" required>
+    <select id="status" required>
+      <option value="">--Pilih Status Kehadiran--</option>
+      <option value="Hadir">Hadir</option>
+      <option value="Tidak Hadir">Tidak Hadir</option>
+    </select>
+    <input type="file" id="foto" accept="image/*" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxyLvGY4b9IxUozjQX2jPJqNii8DZqWBa5jtQ0F9vVDYeg6fD54Et5dHNwrHTKGk4g-fg/exec"; // ganti dengan URL Web App
+
+    document.getElementById("absenForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const nama = document.getElementById("nama").value;
+      const status = document.getElementById("status").value;
+      const fotoFile = document.getElementById("foto").files[0];
+
+      // Convert foto ke base64
+      const reader = new FileReader();
+      reader.onloadend = async function() {
+        const fotoBase64 = reader.result;
+
+        const data = { nama, status, foto: fotoBase64 };
+
+        try {
+          const response = await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify(data)
+          });
+          const result = await response.json();
+          alert("Absensi berhasil disimpan!");
+          document.getElementById("absenForm").reset();
+        } catch (error) {
+          alert("Gagal menyimpan absensi.");
+          console.error(error);
+        }
+      };
+      reader.readAsDataURL(fotoFile);
+    });
+  </script>
+</body>
+</html>
